@@ -1,30 +1,74 @@
+let playerScore = 0;
+let computerScore = 0;
+const buttons = document.querySelectorAll("input");
+
 function computerPlay() {
-  const pick = ["Rock", "Paper", "Scissors"];
-  return pick[Math.floor(Math.random() * pick.length)];
+  let choices = ["rock", "paper", "scissors"];
+  return choices[Math.floor(Math.random() * choices.length)];
 }
 
-console.log(computerPlay());
+function disableButtons() {
+  buttons.forEach((elem) => {
+    elem.disabled = true;
+  });
+}
 
-function playRound(playerSelection, computerSelection) {
-  if (playerSelection === computerSelection) {
-    return `It's a tie! You both picked ${playerSelection}`;
-  } else if (playerSelection === "Rock" && computerSelection === "Scissors") {
-    return "You win! Rock beats Scissors";
-  } else if (playerSelection === "Paper" && computerSelection === "Rock") {
-    return "You win! Paper beats Rock";
-  } else if (playerSelection === "Scissors" && computerSelection === "Paper") {
-    return "You win! Scissors beats Paper";
+function playRound(playerSelection) {
+  let computerSelection = computerPlay();
+  let result = "";
+
+  if (
+    (playerSelection == "rock" && computerSelection == "scissors") ||
+    (playerSelection == "scissors" && computerSelection == "paper") ||
+    (playerSelection == "paper" && computerSelection == "rock")
+  ) {
+    playerScore += 1;
+    result =
+      "You win! " +
+      playerSelection +
+      " beats " +
+      computerSelection +
+      "<br><br>Player score: " +
+      playerScore +
+      "<br>Computer score: " +
+      computerScore;
+
+    if (playerScore == 5) {
+      result += "<br><br>You won the game! Reload the page to play again";
+      disableButtons();
+    }
+  } else if (playerSelection == computerSelection) {
+    result =
+      "It's a tie. You both chose " +
+      playerSelection +
+      "<br><br>Player score: " +
+      playerScore +
+      "<br>Computer score: " +
+      computerScore;
   } else {
-    return `You lose ${computerSelection} beats ${playerSelection}`;
+    computerScore += 1;
+    result =
+      "You lose! " +
+      computerSelection +
+      " beats " +
+      playerSelection +
+      "<br><br>Player score: " +
+      playerScore +
+      "<br>Computer score: " +
+      computerScore;
+
+    if (computerScore == 5) {
+      result += "<br><br>I won the game! Reload the page to play again";
+      disableButtons();
+    }
   }
+
+  document.getElementById("result").innerHTML = result;
+  return;
 }
 
-const playerSelection = prompt(
-  "Start the game by picking among 'rock, paper, scissors'"
-).toLocaleLowerCase();
-const computerSelection = computerPlay();
-console.log(playRound(playerSelection, computerSelection));
-
-function game() {
-    function playRound()
-}
+buttons.forEach((button) => {
+  button.addEventListener("click", function () {
+    playRound(button.value);
+  });
+});
